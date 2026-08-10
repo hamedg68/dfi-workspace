@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "name": "DFI API",
+      "path": "dfi-api"
+    },
+    {
+      "name": "DFI Web",
+      "path": "dfi-web"
+    }
+  ],
+  "settings": {}
+}
