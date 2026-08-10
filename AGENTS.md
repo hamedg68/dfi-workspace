@@ -1,39 +1,383 @@
-# DFI
+# DFI — Agent Instructions
 
-DFI is the factory management system used by Draje.
+DFI (Draje Factory Information System) is a factory management system used by Draje.
 
-## Projects
+This workspace contains the frontend and backend of DFI as two independent Git repositories.
 
-### dfi-api/
+---
+
+## Workspace Structure
+
+```text
+DFI/
+├── AGENTS.md
+├── DFI.code-workspace
+├── dfi-api/
+└── dfi-web/
+```
+
+### `dfi-api/`
 
 Backend API.
 
-- ASP.NET Core
-- SQL Server
-- Entity Framework Core
-- Rahkaran integration
+Main technologies:
 
-### dfi-web/
+* ASP.NET Core
+* Entity Framework Core
+* SQL Server
+* REST API
+* Rahkaran ERP integration
+
+Git repository:
+
+```text
+hamedg68/dfi-api
+```
+
+### `dfi-web/`
 
 Frontend application.
 
-- React
-- Ant Design
-- REST API client
+Main technologies:
 
-## Architecture
+* React
+* Ant Design
+* Axios
+* REST API client
 
-The frontend in `dfi-web/` communicates with the backend in `dfi-api/`.
+Git repository:
 
-When working on features, always check whether changes are required
-in both projects.
+```text
+hamedg68/dfi-web
+```
 
-## Terminology
+---
 
-DFI = Draje Factory Information System
+# Architecture
 
-## Important
+The frontend in `dfi-web/` communicates with the backend in `dfi-api/` through REST APIs.
 
-- `dfi-api/` and `dfi-web/` are separate Git repositories.
-- Do not assume a frontend field exists in the backend DTO.
-- When changing API contracts, inspect both projects.
+A feature may therefore involve changes in:
+
+1. frontend components,
+2. frontend service functions,
+3. backend controllers,
+4. backend models or DTOs,
+5. Entity Framework queries,
+6. SQL Server objects such as tables, views, functions, or stored procedures.
+
+When investigating a feature or bug, do not assume the problem belongs only to the repository where it was first observed.
+
+Inspect both repositories when necessary.
+
+---
+
+# General Rules
+
+## Cross-project investigation
+
+When a frontend component consumes an API:
+
+* Find the frontend service function that performs the request.
+* Determine the exact endpoint being called.
+* Find the corresponding backend controller/action.
+* Inspect the response model or DTO.
+* Trace the backend query or stored procedure when relevant.
+
+Do not guess the backend behavior based only on frontend code.
+
+Likewise, do not assume a backend property is actually used by the frontend without checking `dfi-web/`.
+
+---
+
+## API Contract Changes
+
+Whenever changing an API contract, inspect both projects.
+
+Examples include:
+
+* adding a response property,
+* removing a property,
+* renaming a property,
+* changing its type,
+* changing request parameters,
+* changing route names,
+* changing enum/status values,
+* changing nullable behavior.
+
+Before modifying an API contract, search `dfi-web/` for existing consumers.
+
+After modifying it, verify that frontend usage still matches the backend response.
+
+---
+
+# Backend Guidelines
+
+Backend source is located in:
+
+```text
+dfi-api/
+```
+
+When investigating backend behavior, trace the flow when applicable:
+
+```text
+HTTP Request
+    ↓
+Controller
+    ↓
+DbContext / Service / LINQ
+    ↓
+Entity Framework
+    ↓
+SQL Server / Stored Procedure / Rahkaran
+```
+
+Before changing backend behavior:
+
+* inspect the relevant controller,
+* inspect associated models/DTOs,
+* identify the correct `DbContext`,
+* inspect any stored procedure involved,
+* check whether the endpoint is consumed by the frontend.
+
+Do not assume all database data belongs to the DFI database.
+
+Some functionality integrates with Rahkaran and may depend on Rahkaran schemas, tables, or stored procedures.
+
+---
+
+# Frontend Guidelines
+
+Frontend source is located in:
+
+```text
+dfi-web/
+```
+
+When investigating frontend behavior, trace the flow when applicable:
+
+```text
+React Component
+    ↓
+Frontend service function
+    ↓
+Axios request
+    ↓
+DFI API endpoint
+```
+
+Before modifying frontend data handling:
+
+* inspect the component,
+* inspect the service function making the API request,
+* determine the shape of the backend response,
+* check transformations, grouping, filtering, and mapping performed after the request.
+
+Do not invent frontend fields that do not exist in the backend response.
+
+---
+
+# Database Changes
+
+Database behavior may be implemented using:
+
+* Entity Framework,
+* LINQ,
+* SQL Server tables,
+* SQL Server views,
+* SQL Server stored procedures,
+* Rahkaran database objects.
+
+When modifying a stored procedure:
+
+* preserve existing behavior unless the requested change explicitly requires otherwise,
+* identify every result column consumed by the backend,
+* check the backend result model,
+* check frontend consumers when applicable.
+
+Do not rename or remove SQL result columns without tracing their consumers.
+
+---
+
+# Git Repositories
+
+`dfi-api/` and `dfi-web/` are independent Git repositories.
+
+A change in one repository must not automatically be assumed to belong in the other repository.
+
+Before suggesting Git commands, determine which repository the command should run in.
+
+For example:
+
+```bash
+cd dfi-api
+git status
+```
+
+and:
+
+```bash
+cd dfi-web
+git status
+```
+
+are independent.
+
+Do not commit, reset, rebase, checkout, restore, or otherwise modify Git history unless explicitly requested.
+
+Never discard existing uncommitted user changes.
+
+---
+
+# Existing Code Changes
+
+The working tree may contain uncommitted changes.
+
+Treat existing modifications as intentional unless there is clear evidence otherwise.
+
+Before proposing destructive changes:
+
+* inspect the current implementation,
+* distinguish existing user changes from the requested changes,
+* avoid overwriting unrelated code.
+
+Prefer minimal, targeted changes over broad rewrites unless a refactor is explicitly requested.
+
+---
+
+# Coding Style
+
+Follow the style already used in the surrounding code.
+
+Before introducing a new:
+
+* abstraction,
+* helper,
+* dependency,
+* library,
+* architecture pattern,
+* state-management solution,
+
+first inspect whether the project already has an established approach for the same problem.
+
+Prefer consistency with the existing codebase.
+
+Do not refactor unrelated code while solving a specific problem.
+
+---
+
+# Dependencies
+
+Do not add or upgrade packages automatically.
+
+Before recommending a new dependency:
+
+1. inspect the existing dependencies,
+2. check whether the project already has a suitable solution,
+3. explain why an additional dependency is necessary.
+
+Backend and frontend dependencies must be treated independently.
+
+---
+
+# Debugging
+
+When debugging, find the root cause before changing code.
+
+Prefer tracing the actual data flow over making speculative fixes.
+
+For frontend/backend issues, inspect:
+
+```text
+UI
+→ component
+→ service
+→ HTTP request
+→ controller
+→ query/SP
+→ database
+```
+
+and then trace the returned data in the opposite direction.
+
+If logs, API responses, SQL output, or error messages are available, use them as evidence rather than guessing.
+
+---
+
+# Terminology
+
+DFI means:
+
+```text
+Draje Factory Information System
+```
+
+Draje is the factory/company for which DFI is developed.
+
+Use the following workspace terminology consistently:
+
+```text
+DFI
+├── dfi-api   → backend
+└── dfi-web   → frontend
+```
+
+---
+
+# Agent Behavior
+
+When answering development questions in this workspace:
+
+1. Inspect relevant files before proposing changes.
+2. Search both repositories when the issue crosses the API boundary.
+3. Do not ask for code that already exists in the workspace and can be inspected.
+4. Do not assume APIs, DTOs, database columns, or component behavior without checking them.
+5. Prefer concrete file paths and exact locations when explaining changes.
+6. When suggesting code changes, clearly state which file should be modified.
+7. Preserve existing application behavior unless a behavior change is explicitly requested.
+8. Do not modify unrelated code.
+9. Point out uncertainty when the available code does not establish a fact.
+10. When multiple implementations are possible, prefer the one most consistent with the existing project.
+
+---
+
+# Change Explanations
+
+When explaining a proposed modification, prefer this format:
+
+```text
+File:
+dfi-web/src/...
+
+Change:
+Explain exactly what needs to change.
+
+Reason:
+Explain why this change is needed.
+```
+
+For changes spanning both projects:
+
+```text
+Backend:
+dfi-api/...
+
+Frontend:
+dfi-web/...
+```
+
+This makes cross-project changes easier to review.
+
+---
+
+# Important
+
+* `dfi-api/` and `dfi-web/` are separate Git repositories.
+* The workspace root itself is not application source code.
+* Frontend and backend must be inspected together for API-related changes.
+* Do not assume frontend fields exist in backend DTOs.
+* Do not assume backend response properties are used by the frontend.
+* Trace database-backed behavior to its actual query or stored procedure when necessary.
+* Preserve unrelated user changes.
+* Prefer evidence from the codebase over assumptions.
