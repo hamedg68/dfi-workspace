@@ -180,6 +180,43 @@ Do not invent frontend fields that do not exist in the backend response.
 
 # Database Changes
 
+## Read-only database inspection
+
+For direct DFI SQL Server inspection, use the repository tool:
+
+```text
+dfi-api/Tools/DfiDbQuery/dfi-db
+```
+
+The tool supports two explicit database profiles:
+
+```text
+dfi       -> DFI_DB_CONNECTION_STRING
+rahkaran  -> RAHKARAN_DB_CONNECTION_STRING
+```
+
+Never print, log, commit, or expose either variable's value. Prefer reusable `.sql` files or stdin;
+do not place credentials in commands or files inside the workspace.
+
+Before claiming that database access is unavailable, run:
+
+```bash
+dfi-api/Tools/DfiDbQuery/dfi-db --database dfi --check
+dfi-api/Tools/DfiDbQuery/dfi-db --database rahkaran --check
+```
+
+Always specify `--database dfi` or `--database rahkaran` explicitly in agent-driven inspections.
+
+Use this tool only for read-only inspection unless the user explicitly requests and authorizes a
+different database operation. The configured SQL login should have `db_datareader` permissions only.
+The tool accepts only `SELECT` and CTE queries and rejects common mutating statements locally.
+
+Full setup and usage instructions are in:
+
+```text
+dfi-api/Tools/DfiDbQuery/README.md
+```
+
 Database behavior may be implemented using:
 
 * Entity Framework,
@@ -372,6 +409,15 @@ This makes cross-project changes easier to review.
 ---
 
 # Important
+
+The Persian setup and migration guide for preparing DFI on a new system is located at:
+
+```text
+SETUP.fa.md
+```
+
+Consult it when diagnosing missing SDKs, environment variables, database connectivity, PCH storage,
+or frontend/backend startup on a new machine.
 
 * `dfi-api/` and `dfi-web/` are separate Git repositories.
 * The workspace root itself is not application source code.
