@@ -88,6 +88,10 @@ export AppSettings__Issuer='Test.com'
 # مسیر ذخیره فایل‌های PCH
 export PchFiles__ImagesPath='/absolute/path/to/dfi-data/pch/images'
 export PchFiles__PdfsPath='/absolute/path/to/dfi-data/pch/pdfs'
+
+# کاربر تست محدود برای تست endpointهای محافظت‌شده توسط Codex
+export DFI_TEST_USERNAME='codex-test'
+export DFI_TEST_PASSWORD='A_STRONG_TEST_PASSWORD'
 ```
 
 سطح دسترسی فایل را محدود و تنظیمات را بارگذاری کنید:
@@ -98,6 +102,10 @@ source ~/.zshenv
 ```
 
 هیچ connection string یا رمز واقعی را داخل Git، فایل `AGENTS.md`، پیام چت یا command history قرار ندهید.
+
+کاربر `DFI_TEST_USERNAME` باید یک حساب اختصاصی و محدود باشد. فقط roleهای لازم برای تست‌های موردنظر
+را به آن بدهید؛ برای محاسبات بهای تمام‌شده معمولاً `Computing` و در صورت نیاز
+`PreviousComputationalPeriod` کافی است. از حساب شخصی یا حساب دارای دسترسی گسترده `Main` استفاده نکنید.
 
 ## ۵. آماده‌سازی مسیر فایل‌های PCH
 
@@ -148,7 +156,40 @@ npm start
 برای مقصد متفاوت، `REACT_APP_API_URL` و `REACT_APP_APP_URL` را متناسب با محیط تنظیم کنید. مقدار
 `REACT_APP_API_URL` باید به `/api/` ختم شود.
 
-## ۸. آماده‌سازی ابزار query خواندنی Codex
+## ۸. تست API محافظت‌شده توسط Codex
+
+Codex می‌تواند با متغیرهای `DFI_TEST_USERNAME` و `DFI_TEST_PASSWORD` از endpoint زیر JWT دریافت کند:
+
+```text
+POST http://localhost:5000/api/Login/Login/authenticate
+```
+
+توکن باید فقط موقتاً در `/tmp` نگهداری و با header زیر ارسال شود:
+
+```text
+Authorization: Bearer <token>
+```
+
+نام کاربری، رمز و JWT نباید در خروجی ترمینال، log، چت یا Git نمایش داده شوند. پس از تغییر متغیرهای
+محیطی، Codex و terminal را restart کنید تا sessionهای جدید آن‌ها را دریافت کنند.
+
+برای بازکردن یا دسترسی به پورت محلی، sandbox ممکن است approval نمایش دهد. `AGENTS.md` به Codex اجازه
+می‌دهد اجرای سرویس مرتبط با کار را امتحان کند، اما نمی‌تواند سازوکار امنیتی approval را دور بزند.
+در اولین درخواست اجرای backend یا frontend، approval محدود زیر را در صورت تمایل تأیید و persist کنید:
+
+```text
+dotnet run --no-build --project Draje.csproj --launch-profile Draje
+npm start
+```
+
+بعد از هر تغییر در کد بک‌اند، پیش از اجرای فرمان دارای `--no-build` باید
+`dotnet build Draje.csproj --no-restore` با موفقیت اجرا شده باشد؛ در غیر این صورت ممکن است نسخه قدیمی
+API اجرا شود. اگر وابستگی‌های فرانت‌اند نصب نیستند، قبل از `npm start` فرمان `npm ci` را اجرا کنید.
+
+قبل از اجرای سرویس جدید باید پورت‌های `5000`، `5001` و `3000` بررسی شوند؛ اگر سرویس مناسب در حال اجراست
+از همان استفاده می‌شود.
+
+## ۹. آماده‌سازی ابزار query خواندنی Codex
 
 ابزار داخل مخزن بک‌اند قرار دارد و به نصب `sqlcmd` نیاز ندارد:
 
@@ -176,7 +217,7 @@ dotnet build Tools/DfiDbQuery/DfiDbQuery.csproj --no-restore
 ابزار فقط `SELECT` و CTE را می‌پذیرد، اما تضمین اصلی امنیت همان login دیتابیس با دسترسی صرفاً
 خواندنی است.
 
-## ۹. چک‌لیست نهایی
+## ۱۰. چک‌لیست نهایی
 
 - [ ] هر دو مخزن در مسیر درست clone شده‌اند.
 - [ ] فایل `AGENTS.md` در ریشه workspace قرار دارد.
@@ -186,13 +227,14 @@ dotnet build Tools/DfiDbQuery/DfiDbQuery.csproj --no-restore
 - [ ] اتصال‌های runtime بک‌اند تنظیم شده‌اند.
 - [ ] اتصال‌های read-only ابزار query تنظیم شده‌اند.
 - [ ] secret مربوط به JWT/API مقدار امن دارد.
+- [ ] کاربر تست محدود Codex و متغیرهای `DFI_TEST_USERNAME` و `DFI_TEST_PASSWORD` تنظیم شده‌اند.
 - [ ] مسیرهای image و PDF مربوط به PCH موجود و قابل نوشتن هستند.
 - [ ] `dotnet build Draje.csproj` موفق است.
 - [ ] اتصال هر دو profile ابزار `dfi-db` موفق است.
 - [ ] `npm ci` و `npm start` موفق هستند.
 - [ ] فرانت‌اند می‌تواند API را از آدرس تنظیم‌شده فراخوانی کند.
 
-## ۱۰. عیب‌یابی سریع
+## ۱۱. عیب‌یابی سریع
 
 ### متغیر محیطی پیدا نمی‌شود
 

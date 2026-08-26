@@ -178,6 +178,51 @@ Do not invent frontend fields that do not exist in the backend response.
 
 ---
 
+# Local Service Execution and Authenticated API Testing
+
+A dedicated DFI test account is available through these environment variables:
+
+```text
+DFI_TEST_USERNAME
+DFI_TEST_PASSWORD
+```
+
+When testing protected API endpoints, authenticate with:
+
+```text
+POST /api/Login/Login/authenticate
+```
+
+Store the returned JWT only in `/tmp` and send it through the `Authorization: Bearer` header.
+Never print, log, commit, or expose the username, password, or JWT. Before claiming that
+authentication is unavailable, check that both environment variables are configured without
+displaying their values.
+
+When a relevant test requires local services and they are not already running, the agent may start
+them with these commands:
+
+```bash
+# From dfi-api
+dotnet run --no-build --project Draje.csproj --launch-profile Draje
+
+# From dfi-web
+npm start
+```
+
+After backend source changes, run `dotnet build Draje.csproj --no-restore` successfully before using
+`dotnet run --no-build`; otherwise the running API may use stale binaries. If frontend dependencies
+are missing, run `npm ci` before `npm start`.
+
+Backend ports are `5000`/`5001`; the frontend port is `3000`. First check whether a port is already
+in use and reuse the running service when possible. A sandbox approval may still be required to bind
+or access local ports: instructions in this file authorize attempting the in-scope command, but do
+not grant or bypass the product's approval mechanism. When an approval prompt is shown, request the
+narrow reusable command prefix and let the user decide whether to persist it.
+
+For backend-only API investigations, do not start the frontend unless UI behavior also needs testing.
+
+---
+
 # Database Changes
 
 ## Read-only database inspection
