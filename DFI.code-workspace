@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "DFI",
+      "path": "."
+    },
+    {
       "name": "DFI API",
       "path": "dfi-api"
     },

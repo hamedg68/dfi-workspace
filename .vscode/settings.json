@@ -1,0 +1,6 @@
+{
+  "files.exclude": {
+    "dfi-api": true,
+    "dfi-web": true
+  }
+}
