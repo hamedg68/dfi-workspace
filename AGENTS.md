@@ -4,6 +4,23 @@ DFI (Draje Factory Information System) is a factory management system used by Dr
 
 This workspace contains the frontend and backend of DFI as two independent Git repositories.
 
+## Mandatory Instruction Loading
+
+At the start of every new chat/session, before planning, searching, inspecting code, or running
+commands, read these instruction files completely, in this order. All paths are relative to the
+workspace root:
+
+1. `AGENTS.md`
+2. `dfi-api/AGENTS.md`
+3. `dfi-web/AGENTS.md`
+
+This applies even when the initial request appears to concern only the frontend or backend. Treat
+the child instructions as mandatory supplements to this workspace-level file.
+
+Within the same chat/session, do not reread all three files for every new task. Reread the relevant
+instruction files only when one has changed, the conversation context has been compacted or reset,
+or the task enters a repository whose instructions have not yet been read in the current session.
+
 ---
 
 ## Workspace Structure
