@@ -74,6 +74,11 @@ hamedg68/dfi-web
 
 The frontend in `dfi-web/` communicates with the backend in `dfi-api/` through REST APIs.
 
+DFI is a complementary system to Rahkaran ERP. Rahkaran is an independent system with its own
+database, while DFI has a separate application database. Connection details and credentials must
+remain in server-side configuration or environment variables and must never be copied into this
+file, source code, logs, or chat output.
+
 A feature may therefore involve changes in:
 
 1. frontend components,
@@ -86,6 +91,13 @@ A feature may therefore involve changes in:
 When investigating a feature or bug, do not assume the problem belongs only to the repository where it was first observed.
 
 Inspect both repositories when necessary.
+
+## Rahkaran and DFI ownership in Sales Order Management
+
+For the Sales Order Management feature, Rahkaran remains the source of truth for Rahkaran-owned
+commercial and logistics documents. DFI must not create or edit those documents; it only manages
+its own fulfillment metadata. Read [Sales Order Management ownership](docs/sales-order-management.md)
+before investigating or changing that feature.
 
 ---
 
