@@ -1,51 +1,106 @@
-# Sales Order Management ownership
+# مدیریت درخواست فروش — مالکیت داده و قواعد تأمین
 
-This guide applies only to the Sales Order Management feature and its related frontend and backend
-code.
+این راهنما فقط به قابلیت «مدیریت درخواست فروش» و کدهای فرانت و بک‌اند مرتبط با آن مربوط است.
 
-## Ownership
+## دامنه و مالکیت داده
 
-The page combines orders owned by two different systems:
+صفحهٔ مدیریت درخواست فروش، سفارش‌های دو سامانه را کنار هم نمایش می‌دهد:
 
-* Rahkaran-owned rows:
-  * sales requests;
-  * remaining sales requests (called `تتمه درخواست‌ها` for food representatives and chain customers).
-* DFI-owned rows:
-  * market orders;
-  * Warehouse 3 orders.
+* سفارش‌های متعلق به راهکاران:
+  * درخواست فروش؛
+  * تتمهٔ درخواست فروش؛ یعنی ماندهٔ درخواست‌های نمایندگی غذایی و مشتریان زنجیره‌ای که حداقل یک سند خروج فروش دارند.
+* سفارش‌های متعلق به DFI:
+  * سفارش بازار؛
+  * سفارش انبار ۳.
 
-DFI owns and manages the full lifecycle of DFI-originated market and Warehouse 3 orders.
+DFI مالک چرخهٔ کامل سفارش‌های بازار و انبار ۳ است؛ از ثبت سفارش تا پیش‌فاکتور، حواله، سند خروج و سایر اسناد DFI.
 
-Rahkaran remains the source of truth for Rahkaran sales requests and their commercial and logistics
-lifecycle. DFI does not create or edit those requests, quotations, orders, issue permits, sales
-delivery vouchers, or related Rahkaran documents.
+راهکاران مالک درخواست‌های فروش و چرخهٔ تجاری و لجستیکی آن‌ها است. DFI نباید درخواست فروش، پیش‌فاکتور، سفارش، حواله، مجوز خروج، سند خروج یا هر سند تجاری/لجستیکی راهکاران را ایجاد یا ویرایش کند.
 
-For Rahkaran-owned rows, DFI only manages its own operational fulfillment metadata, including:
+برای ردیف‌های متعلق به راهکاران، DFI فقط داده‌های عملیاتی خودش را نگهداری می‌کند:
 
-* supply allocation from new-price, old-price, and marked-price inventory;
-* delivery date;
-* delivery priority;
-* automation number;
-* DFI workflow and comment metadata, where applicable.
+* سهمیه از موجودی جدید، قدیم و ستاره‌دار؛
+* تاریخ تحویل؛
+* اولویت تحویل؛
+* شماره اتوماسیون؛
+* وضعیت گردش‌کار و توضیحات DFI، در صورت نیاز.
 
-This DFI-only fulfillment data is stored in the DFI database and must not be treated as if it were
-stored in Rahkaran.
+این اطلاعات در دیتابیس DFI ذخیره می‌شوند و نباید با اطلاعات و اسناد راهکاران اشتباه گرفته شوند.
 
-## Remainders and allocations
+## درخواست راهکاران و تتمه
 
-When a Rahkaran sales request is not delivered completely, Rahkaran exposes the remaining quantity
-as a remainder request. A later sales delivery voucher can reduce that remainder again. DFI supply
-allocations are persistent snapshots and must be reconciled against the latest Rahkaran remainder
-before they are displayed, validated, or reused. Do not assume a previously saved DFI allocation is
-still valid merely because the Rahkaran sale-request ID and part code are unchanged.
+تا وقتی برای یک درخواست فروش راهکاران هیچ سند خروج فروش ثبت نشده باشد، در بخش درخواست‌های جدید نمایش داده می‌شود. پس از اولین سند خروج، اگر مقداری از آن باقی مانده باشد، راهکاران آن را در تتمهٔ درخواست‌ها نمایش می‌دهد.
 
-Always distinguish these concepts:
+مقدار تتمه برابر است با:
 
 ```text
-Rahkaran requested / delivered / remainder quantity
-    !=
-DFI new-price / old-price / marked-price supply allocation
+مقدار درخواست راهکاران − مجموع سندهای خروج فروش راهکاران
 ```
 
-Trace Rahkaran quantities from the Rahkaran database and DFI allocations from the DFI database.
-Do not update Rahkaran lifecycle documents as part of DFI fulfillment management.
+هر سند خروج بعدی می‌تواند این مانده را کمتر کند. DFI فقط این مانده را می‌خواند؛ نباید سند خروج راهکاران را تغییر دهد.
+
+## سهمیهٔ DFI و snapshot منبع
+
+مقدار درخواست/تحویل/ماندهٔ راهکاران با سهمیهٔ DFI یک مفهوم نیست:
+
+```text
+مقدار درخواست، تحویل و ماندهٔ راهکاران
+    ≠
+سهمیهٔ DFI از موجودی جدید، قدیم و ستاره‌دار
+```
+
+هنگام ثبت صریح «تأمین نیاز» توسط کاربر، DFI علاوه بر سهمیه، تصویری از مقدار فعلی هر قلم منبع (`SourceQuantitySnapshot`) را نگهداری می‌کند. برای راهکاران این مقدار، ماندهٔ همان لحظه است و برای سفارش‌های بازار و انبار ۳ نیز مقدارِ قابل تحویلِ همان لحظه است.
+
+این snapshot فقط با ثبت مجدد تأمین توسط کاربر به‌روزرسانی می‌شود؛ خواندن صفحه، دریافت درخواست از راهکاران یا ثبت سند خروج نباید آن را تغییر دهد.
+
+## مغایرت سفارش
+
+مغایرت با مقایسهٔ snapshot آخرین تأمین با وضعیت فعلی منبع محاسبه می‌شود و شامل این حالت‌ها است:
+
+* اضافه‌شدن یک قلم؛
+* حذف‌شدن یک قلم؛
+* افزایش مقدار یک قلم؛
+* کاهش مقدار یک قلم.
+
+مغایرت صرفاً هشدار نمایشی است:
+
+* در جدول، ریبون «مغایرت» روی سلول وضعیت تأمین نمایش داده می‌شود؛
+* در بخش «نمایش مغایرت‌ها»، اقلام و مقدار قبلی/فعلی نمایش داده می‌شوند؛
+* مغایرت به‌عنوان رکورد یا رویداد مستقل در دیتابیس ذخیره نمی‌شود؛
+* مغایرت نباید سهمیهٔ ذخیره‌شده را صفر یا تغییر دهد؛
+* مغایرت نباید وضعیت تأمین را به «عدم تأمین» تبدیل کند؛ ممکن است با توجه به نسبت سهمیه و مانده، وضعیت «تأمین بخشی» نمایش داده شود؛
+* هشدار تا زمانی باقی می‌ماند که کاربر تأمین نیاز را با مقدار و منبع درستِ جدید ثبت کند؛ این ثبت، snapshot را به‌روز می‌کند و در صورت رفع اختلاف، هشدار را برمی‌دارد.
+
+اگر خود درخواست راهکاران دیگر در راهکاران وجود نداشته باشد و در صفحهٔ مدیریت درخواست فروش ردیفی برای آن ساخته نشود، نباید به‌صورت مغایرت نمایش داده شود؛ کاربر امکان بازبینی یا ثبت تأمین آن سفارش را در این صفحه ندارد.
+
+## رفتار سند خروج برای سفارش‌های DFI
+
+این قاعده برای سفارش بازار و سفارش انبار ۳ یکسان است، چون ثبت سند خروج هر دو از مسیر مشترک DFI انجام می‌شود.
+
+ثبت سند خروج DFI فقط مقدار تحویل‌شده و ماندهٔ سفارش را تغییر می‌دهد. نباید سهمیهٔ ذخیره‌شدهٔ جدید، قدیم یا ستاره‌دار را صفر کند. سهمیهٔ آخرین ثبت، مبنای مقایسه با ماندهٔ جدید است و فقط با ویرایش صریح تأمین توسط کاربر تغییر می‌کند.
+
+مثال:
+
+```text
+سفارش انبار ۳: ۱۰ کارتن از یک کالا
+تأمین ثبت‌شده: ۱۰ کارتن از موجودی قدیم
+سند خروج DFI: ۵ کارتن
+ماندهٔ جدید: ۵ کارتن
+
+نتیجه: مغایرت کاهش مقدار و ریبون نمایش داده می‌شود؛
+سهمیهٔ ثبت‌شده نباید صفر و وضعیت نباید «عدم تأمین» شود.
+کاربر در صورت تأیید، تأمین ماندهٔ ۵ کارتنی را ثبت می‌کند.
+```
+
+## رفتار سهمیه پس از تبدیل درخواست راهکاران به تتمه
+
+با ثبت سند خروج در راهکاران، fulfillment و سهمیهٔ DFI مربوط به همان شناسهٔ درخواست حفظ می‌شود. در تتمه، مقدار قابل‌نمایش از ماندهٔ جدید راهکاران گرفته می‌شود و با snapshot آخرین تأمین مقایسه می‌گردد.
+
+در نتیجه، برای مثال اگر از ۱۰ کارتن سهمیه‌دار، ۵ کارتن در راهکاران خارج شود:
+
+* تتمه با ماندهٔ ۵ کارتن نمایش داده می‌شود؛
+* سهمیهٔ ثبت‌شده در DFI خودکار حذف نمی‌شود؛
+* مغایرت کاهش مقدار و ریبون نمایش داده می‌شود؛
+* تا ثبت مجدد تأمین توسط کاربر، وضعیت به «عدم تأمین» تبدیل نمی‌شود.
+
+همیشه مقدار و اسناد راهکاران را از دیتابیس راهکاران، و سهمیهٔ DFI را از دیتابیس DFI دنبال کنید. هیچ تغییر در چرخهٔ اسناد راهکاران نباید بخشی از عملیات تأمین DFI باشد.
