@@ -96,7 +96,7 @@ Inspect both repositories when necessary.
 
 For the Sales Order Management feature, Rahkaran remains the source of truth for Rahkaran-owned
 commercial and logistics documents. DFI must not create or edit those documents; it only manages
-its own fulfillment metadata. Read [Sales Order Management ownership](docs/sales-order-management.md)
+its own fulfillment metadata. Read [Logistics ownership and sales order management rules](docs/logistics.md)
 before investigating or changing that feature.
 
 ---
