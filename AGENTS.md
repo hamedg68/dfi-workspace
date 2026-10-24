@@ -99,6 +99,13 @@ commercial and logistics documents. DFI must not create or edit those documents;
 its own fulfillment metadata. Read [Logistics ownership and sales order management rules](docs/logistics.md)
 before investigating or changing that feature.
 
+## SMS module
+
+Read [Kavenegar SMS module guide](docs/sms.md) before investigating, operating, deploying, or
+changing the SMS feature. It defines the provider contract, secrets, access role, internal API,
+validation rules, production handoff, testing, troubleshooting, and the boundary between the
+implemented send flow and future delivery-status or history features.
+
 ---
 
 # General Rules
