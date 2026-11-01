@@ -340,8 +340,8 @@ dotnet restore Draje.csproj
 dotnet publish -c Release --no-restore -o ./publish Draje.csproj
 
 cd /path/to/DFI/dfi-web
-npm ci
-npm run build
+yarn install --frozen-lockfile
+yarn build
 ```
 
 خروجی backend در `dfi-api/publish/` و خروجی frontend در `dfi-web/build/` است. این دو خروجی را با
@@ -465,7 +465,7 @@ dotnet test tests/Draje.UnitTests/Draje.UnitTests.csproj \
 
 ```bash
 cd dfi-web
-npm test -- --watchAll=false --runInBand \
+yarn test --watchAll=false --runInBand \
   src/components/sms/smsRecipients.test.js \
   src/components/general/menuConfig.test.js
 ```

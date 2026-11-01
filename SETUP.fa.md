@@ -19,7 +19,7 @@ DFI/
 Git       2.55
 .NET SDK  10.0.111
 Node.js   22.14
-npm       10.9
+Yarn      1.22.22
 SQL Server
 ```
 
@@ -146,13 +146,14 @@ REACT_APP_API_URL=http://localhost:5000/api/
 REACT_APP_APP_URL=http://localhost:3000
 ```
 
+مدیر نصب فرانت‌اند Yarn Classic نسخهٔ `1.22.22` است و تنها lockfile پروژه `yarn.lock` است.
 برای نصب و اجرا:
 
 ```bash
 cd DFI/dfi-web
 
-npm ci
-npm start
+yarn install --frozen-lockfile
+yarn dev
 ```
 
 برای مقصد متفاوت، `REACT_APP_API_URL` و `REACT_APP_APP_URL` را متناسب با محیط تنظیم کنید. مقدار
@@ -185,12 +186,12 @@ Authorization: Bearer <token>
 
 ```text
 dotnet run --no-build --project Draje.csproj --launch-profile Draje
-npm start
+yarn dev
 ```
 
 بعد از هر تغییر در کد بک‌اند، پیش از اجرای فرمان دارای `--no-build` باید
 `dotnet build Draje.csproj --no-restore` با موفقیت اجرا شده باشد؛ در غیر این صورت ممکن است نسخه قدیمی
-API اجرا شود. اگر وابستگی‌های فرانت‌اند نصب نیستند، قبل از `npm start` فرمان `npm ci` را اجرا کنید.
+API اجرا شود. اگر وابستگی‌های فرانت‌اند نصب نیستند، قبل از `yarn dev` فرمان `yarn install --frozen-lockfile` را اجرا کنید.
 
 قبل از اجرای سرویس جدید باید پورت‌های `5000`، `5001` و `3000` بررسی شوند؛ اگر سرویس مناسب در حال اجراست
 از همان استفاده می‌شود.
@@ -228,7 +229,7 @@ dotnet build Tools/DfiDbQuery/DfiDbQuery.csproj --no-restore
 - [ ] هر دو مخزن در مسیر درست clone شده‌اند.
 - [ ] فایل `AGENTS.md` در ریشه workspace قرار دارد.
 - [ ] `.NET SDK 10` نصب است.
-- [ ] Node.js و npm نصب هستند.
+- [ ] Node.js و Yarn Classic نسخهٔ 1.22.22 نصب هستند.
 - [ ] دسترسی شبکه به SQL Serverهای DFI و راهکاران برقرار است.
 - [ ] اتصال‌های runtime بک‌اند تنظیم شده‌اند.
 - [ ] اتصال‌های read-only ابزار query تنظیم شده‌اند.
@@ -237,7 +238,7 @@ dotnet build Tools/DfiDbQuery/DfiDbQuery.csproj --no-restore
 - [ ] مسیرهای image و PDF مربوط به PCH موجود و قابل نوشتن هستند.
 - [ ] `dotnet build Draje.csproj` موفق است.
 - [ ] اتصال هر دو profile ابزار `dfi-db` موفق است.
-- [ ] `npm ci` و `npm start` موفق هستند.
+- [ ] `yarn install --frozen-lockfile` و `yarn dev` موفق هستند.
 - [ ] فرانت‌اند می‌تواند API را از آدرس تنظیم‌شده فراخوانی کند.
 
 ## ۱۱. عیب‌یابی سریع
