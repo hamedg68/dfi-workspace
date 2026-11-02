@@ -242,12 +242,12 @@ them with these commands:
 dotnet run --no-build --project Draje.csproj --launch-profile Draje
 
 # From dfi-web
-npm start
+yarn dev
 ```
 
 After backend source changes, run `dotnet build Draje.csproj --no-restore` successfully before using
 `dotnet run --no-build`; otherwise the running API may use stale binaries. If frontend dependencies
-are missing, run `npm ci` before `npm start`.
+are missing, run `yarn install --frozen-lockfile` before `yarn dev`.
 
 Backend ports are `5000`/`5001`; the frontend port is `3000`. First check whether a port is already
 in use and reuse the running service when possible. A sandbox approval may still be required to bind
