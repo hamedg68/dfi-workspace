@@ -383,6 +383,13 @@ Prefer consistency with the existing codebase.
 
 Do not refactor unrelated code while solving a specific problem.
 
+## Service documentation
+
+Whenever adding a frontend or backend service, include concise in-code documentation explaining its
+responsibility and main logic. Document its data sources, read/write behavior, and significant business
+rules, including units, date/time handling, and aggregation when relevant. Place explanations beside
+the relevant class, method, or non-obvious calculation, and update them when the behavior changes.
+
 ---
 
 # Dependencies
