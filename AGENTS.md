@@ -99,11 +99,11 @@ commercial and logistics documents. DFI must not create or edit those documents;
 its own fulfillment metadata. Read [Logistics ownership and sales order management rules](docs/logistics.md)
 before investigating or changing that feature.
 
-## Customer group shipments and forecasts
+## Customer group quotas and shipment reports
 
-Read [Customer group shipments and period forecasts](docs/customer-group-shipments.md) before
-investigating or changing `/CustomerGroupShipments`. It defines the shared data ownership, carton
-aggregation, optional forecast distribution, Iran-date locking, comparison rules, and links to the
+Read [Customer group quotas and shipment reports](docs/customer-group-quotas.md) before
+investigating or changing `/CustomerGroupQuotas`. It defines the shared data ownership, carton
+aggregation, optional quota distribution, Iran-date locking, comparison rules, and links to the
 user guide and detailed API, database, testing, and deployment documentation in both repositories.
 
 ## SMS module

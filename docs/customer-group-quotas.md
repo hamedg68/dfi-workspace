@@ -7,10 +7,10 @@
 | مستند                                                                    | مخاطب و کاربرد                                                                             |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | همین سند                                                                 | مرجع مشترک قواعد، معماری و مسیر بررسی قابلیت در هر دو مخزن                                 |
-| [راهنمای کاربران](../dfi-web/docs/customer-group-shipments.fa.md)        | آموزش کار با صفحه، مثال‌های عددی، تفسیر مقایسه و رفع خطاهای کاربری                         |
-| [راهنمای فنی و انتشار](../dfi-api/Database/CustomerGroupShipments.fa.md) | قرارداد کامل API، نمونه‌های JSON، مدل دیتابیس، فایل‌های پیاده‌سازی، آزمون‌ها و migrationها |
+| [راهنمای کاربران](../dfi-web/docs/customer-group-quotas.fa.md)        | آموزش کار با صفحه، مثال‌های عددی، تفسیر مقایسه و رفع خطاهای کاربری                         |
+| [راهنمای فنی و انتشار](../dfi-api/Database/CustomerGroupQuotas.fa.md) | قرارداد کامل API، نمونه‌های JSON، مدل دیتابیس، فایل‌های پیاده‌سازی، آزمون‌ها و migrationها |
 
-مسیر صفحه `/CustomerGroupShipments` است. جدول سهمیه‌ها و مقایسه در صفحهٔ اصلی قرار دارند. فهرست دوره‌ها با دکمهٔ «فهرست سهمیه‌بندی‌ها»
+مسیر صفحه `/CustomerGroupQuotas` است. جدول سهمیه‌ها و مقایسه در صفحهٔ اصلی قرار دارند. فهرست دوره‌ها با دکمهٔ «فهرست سهمیه‌بندی‌ها»
 در مودال باز می‌شود؛ ایجاد، ویرایش مشخصات و حذف همان‌جا انجام می‌شود. انتخاب تک‌ردیفی با radio در
 `rowSelection` و سپس «نمایش سهمیه‌بندی»، دوره را در صفحه بارگذاری می‌کند؛ انتخاب خودکار وجود ندارد. دکمهٔ «ارسالی‌ها» گزارش ارسال واقعی و فیلتر تاریخ مستقل آن را در drawer باز می‌کند.
 ویرایش و حذف در ستون «عملیات» هر ردیف هستند و نیاز به انتخاب رادیویی ندارند؛ دکمه‌های ایجاد و به‌روزرسانی فهرست آیکونی هستند.
@@ -70,7 +70,7 @@
 8. هیچ عددی خودکار بین زیرگروه‌ها تقسیم نمی‌شود. جمع کل سهمیه‌بندی فقط از ریشه‌ها ساخته می‌شود.
 
 کنترل سقف توزیع، قاعدهٔ اعتبار **سهمیه‌بندی دوره‌ای** است؛ اتصال آن به کنترل تأمین در مرحلهٔ بعد انجام می‌شود.
-نمونه‌های چندسطحی و تفاوت صفر/خالی در [راهنمای کاربران](../dfi-web/docs/customer-group-shipments.fa.md#allocation) آمده‌اند.
+نمونه‌های چندسطحی و تفاوت صفر/خالی در [راهنمای کاربران](../dfi-web/docs/customer-group-quotas.fa.md#allocation) آمده‌اند.
 
 ## تاریخ، قفل دوره و سابقه
 
@@ -113,7 +113,7 @@
 ```text
 dfi-web: صفحهٔ سهمیه‌بندی و drawer گزارش ارسالی‌ها
     ↓ سرویس‌های HTTP
-dfi-api: CustomerGroupShipmentsController / CustomerGroupShipmentPlansController
+dfi-api: CustomerGroupShipmentsController / CustomerGroupQuotaPeriodsController
     ↓
 گزارش: خروج راهکاران + خروج بازار DFI + طبقه‌بندی جاری مشتریان
 سهمیه‌بندی: خواندن/نوشتن در DFI؛ خواندن مراجع راهکاران هنگام اعتبارسنجی ذخیره
@@ -124,10 +124,10 @@ dfi-api: CustomerGroupShipmentsController / CustomerGroupShipmentPlansController
 | API                                                               | مسئولیت                                           |
 | ----------------------------------------------------------------- | ------------------------------------------------- |
 | `GET /api/CustomerGroupShipments?fromDate=...&toDate=...`         | خروج کارتنی در سطح مشتری، همراه گروه‌ها و محصولات |
-| `GET /api/CustomerGroupShipmentPlans` و `GET /{id}` روی همین مسیر | فهرست و جزئیات دوره‌ها از DFI                     |
-| `POST /api/CustomerGroupShipmentPlans`                            | ایجاد دوره و برنامه                               |
-| `PUT /api/CustomerGroupShipmentPlans/{id}`                        | جایگزینی کل برنامه با کنترل نسخه و پایان دوره     |
-| `DELETE /api/CustomerGroupShipmentPlans/{id}?rowVersion=...`      | حذف سربرگ و اقلام با کنترل نسخه و پایان دوره      |
+| `GET /api/CustomerGroupQuotaPeriods` و `GET /{id}` روی همین مسیر | فهرست و جزئیات دوره‌ها از DFI                     |
+| `POST /api/CustomerGroupQuotaPeriods`                            | ایجاد دوره و برنامه                               |
+| `PUT /api/CustomerGroupQuotaPeriods/{id}`                        | جایگزینی کل برنامه با کنترل نسخه و پایان دوره     |
+| `DELETE /api/CustomerGroupQuotaPeriods/{id}?rowVersion=...`      | حذف سربرگ و اقلام با کنترل نسخه و پایان دوره      |
 | `GET /api/Rahkaran/customer-groups`                               | گروه‌های جاری مشتریان                             |
 | `GET /api/SalesRequestBalance/GetHierarchy`                       | محصولات فعال و اولویت نمایش                       |
 
@@ -138,16 +138,16 @@ dfi-api: CustomerGroupShipmentsController / CustomerGroupShipmentPlansController
 فایل‌های اصلی بررسی عبارت‌اند از:
 
 - [سرویس خواندن ارسال](../dfi-api/Services/OrderPoint/CustomerGroupShipmentReadService.cs)
-  و [سرویس سهمیه‌بندی](../dfi-api/Services/OrderPoint/CustomerGroupShipmentPlanService.cs) در بک‌اند؛
-- [ساخت گزارش](../dfi-web/src/components/logistic/customerGroupShipments/shipmentReport.js)،
-  [قواعد سهمیه‌بندی](../dfi-web/src/components/logistic/customerGroupShipments/shipmentPlan.js) و
-  [خواندن مستقل منابع](../dfi-web/src/components/logistic/customerGroupShipments/useShipmentPlans.js) در فرانت‌اند.
+  و [سرویس سهمیه‌بندی](../dfi-api/Services/OrderPoint/CustomerGroupQuotaService.cs) در بک‌اند؛
+- [ساخت گزارش](../dfi-web/src/components/logistic/customerGroupQuotas/shipmentReport.js)،
+  [قواعد سهمیه‌بندی](../dfi-web/src/components/logistic/customerGroupQuotas/quota.js) و
+  [خواندن مستقل منابع](../dfi-web/src/components/logistic/customerGroupQuotas/useCustomerGroupQuotas.js) در فرانت‌اند.
 
-نقشهٔ کامل کنترلر، DTO، مدل، context، جدول و فرم در [راهنمای فنی](../dfi-api/Database/CustomerGroupShipments.fa.md#implementation) است.
+نقشهٔ کامل کنترلر، DTO، مدل، context، جدول و فرم در [راهنمای فنی](../dfi-api/Database/CustomerGroupQuotas.fa.md#implementation) است.
 
 ## دسترسی، خطا و حفظ پیش‌نویس
 
-GETها احراز هویت می‌خواهند؛ POST، PUT و DELETE به نقش موجود `CustomerGroupShipments` نیاز دارند.
+GETها احراز هویت می‌خواهند؛ POST، PUT و DELETE به نقش موجود `CustomerGroupQuotas` نیاز دارند.
 مسیر و منو guard دسترسی به کل بخش دارند. داخل صفحه، کنترل‌ها بر اساس نقش پنهان یا غیرفعال نمی‌شوند؛
 سرور مجوز نوشتن را کنترل می‌کند. قفل دوره و کامل‌نبودن اطلاعات پایه، مستقل از نقش، ویرایش را می‌بندند.
 
@@ -166,14 +166,69 @@ GETها احراز هویت می‌خواهند؛ POST، PUT و DELETE به نق
 واحد کارتن، مرز روز ایران، تفاوت صفر/خالی، عدم دوباره‌شماری والد و فرزند، استقلال خواندن DFI و منع ویرایش
 دورهٔ بسته باید حفظ شوند. تغییر قرارداد یا قواعد مقایسه باید با راهنمای کاربری و فنی هماهنگ شود.
 
-سهمیه‌بندی در `ord.CustomerGroupShipmentPlans` و `ord.CustomerGroupShipmentPlanItems` ذخیره می‌شود.
-دو migration این قابلیت عبارت‌اند از:
+سهمیه‌بندی در `ord.CustomerGroupQuotaPeriods` و `ord.CustomerGroupQuotaItems` ذخیره می‌شود.
+migrationهای این قابلیت عبارت‌اند از:
 
 | زمینه               | migration                                                                |
 | ------------------- | ------------------------------------------------------------------------ |
 | `LoginContext`      | `20261108081219_AddCustomerGroupShipmentsAccessRole`؛ تعریف دسترسی منو   |
 | `OrderPointContext` | `20261109103652_AddCustomerGroupShipmentPlans`؛ سربرگ و اقلام سهمیه‌بندی |
+| `OrderPointContext` | `20261114075422_RenameCustomerGroupQuotaTables`؛ تغییر نام بدون بازسازی جدول‌ها |
+| `LoginContext` | `20261114075622_RenameCustomerGroupQuotaAccessRole`؛ تغییر نام همان نقش با حفظ انتساب‌ها |
 
-راهنمای آزمون‌های متمرکز در [بخش آزمون](../dfi-api/Database/CustomerGroupShipments.fa.md#verification) و
-دستورهای migration و اسکریپت‌های آماده در [بخش انتشار](../dfi-api/Database/CustomerGroupShipments.fa.md#deployment) هستند.
+راهنمای آزمون‌های متمرکز در [بخش آزمون](../dfi-api/Database/CustomerGroupQuotas.fa.md#verification) و
+دستورهای migration و اسکریپت‌های آماده در [بخش انتشار](../dfi-api/Database/CustomerGroupQuotas.fa.md#quota-rename-deployment) هستند.
 برای این قابلیت تغییر دیتابیس راهکاران لازم نیست. انتشار بک‌اند و فرانت‌اند باید هماهنگ باشد؛ انتشار Production دستی است.
+
+## نام‌گذاری سهمیه‌بندی و سازگاری نسخه‌های قبلی
+
+از ۲۳ آبان ۱۴۰۵، مسیر اصلی `/CustomerGroupQuotas` و API دوره‌ها `/api/CustomerGroupQuotaPeriods` است.
+مسیر قدیمی `/CustomerGroupShipments` با حفظ query و hash به مسیر جدید هدایت می‌شود.
+API قدیمی `/api/CustomerGroupShipmentPlans` به‌عنوان alias موقت همان عملیات باقی است؛ کلاینت جدید فقط مسیر اصلی را مصرف می‌کند.
+گزارش ارسال واقعی، `GET /api/CustomerGroupShipments` و سرویس/DTO مرتبط، نام و قرارداد قبلی خود را حفظ می‌کنند.
+
+جدول‌ها به `ord.CustomerGroupQuotaPeriods` و `ord.CustomerGroupQuotaItems` تغییر نام یافته‌اند؛ رابطهٔ اقلام
+`PeriodId` است. migration فقط نام جدول، ستون، ایندکس و constraint را عوض می‌کند و شناسه‌ها، اعداد،
+`UpdatedAt` و `RowVersion` دست‌نخورده می‌مانند. migrationهای قبلی تاریخچه‌اند و بازنویسی نشده‌اند.
+نقش موجود با همان `Id` به `CustomerGroupQuotas` با عنوان «سهمیه‌بندی مشتریان» تغییر نام می‌یابد؛ والد، ترتیب،
+فعال‌بودن و انتساب کاربران حفظ می‌شوند. بک‌اند نقش قدیمی JWTهای صادرشده را نیز برای همین عملیات می‌پذیرد؛
+فرانت‌اند همان نقش قدیمی را هنگام خواندن توکن به نام جدید نیز نگاشت می‌کند تا مسیر و منو تا انقضای طبیعی توکن کار کنند.
+صدور توکن جدید از نام جاری دیتابیس استفاده می‌کند. نیازی به تغییر در راهکاران نیست.
+
+<a id="compatibility-retirement"></a>
+
+## معیار پایان سازگاری موقت
+
+حذف سازگاری، انتشار جداگانه‌ای پس از احراز معیارهای زیر است؛ رسیدن به تاریخ تقویمی یا انتشار یک نسخه
+به‌تنهایی مجوز حذف نیست. تا وقتی شواهد انتشار و مصرف ثبت نشده‌اند، مسیر API و نقش قدیمی پذیرفته می‌شوند.
+
+### نقش قدیمی در JWT
+
+1. migration تغییر نام نقش روی محیط مقصد اعمال شده و تمام صادرکنندگان توکن از نام `CustomerGroupQuotas`
+   استفاده کنند؛ نمونهٔ فعال با صدور نقش قدیمی باقی نمانده باشد.
+2. زمان توقف آخرین صادرکنندهٔ نقش قدیمی، با نام `T0` و timestamp دارای offset UTC در گزارش انتشار ثبت شود.
+   در `LoginController.GenerateJSONWebToken` فعلی، عمر توکن **۶۰۰ دقیقه** است و در تنظیمات فعلی JWT،
+   `ClockSkew` پیش‌فرض کتابخانه **۵ دقیقه** است. حذف پذیرش نقش قدیمی زودتر از `T0 + ۶۰۵ دقیقه`
+   (۱۰ ساعت و ۵ دقیقه) مجاز نیست. اگر نسخه‌ای در دورهٔ گذار TTL یا ClockSkew بیشتری داشته، بیشترین مقدار
+   همان دوره مبناست؛ این مقادیر هنگام انتشار دوباره از کد و تنظیمات واقعی بررسی شوند.
+3. پس از عبور از این مهلت، احراز هویت و مجوز نقش جدید در محیط آزمون بررسی شود. پذیرش `CustomerGroupShipments`
+   در عملیات نوشتن بک‌اند و نگاشت متناظر در `authService.getCurrentUser` فرانت‌اند با هم حذف شوند؛
+   آزمون‌های نقش جدید، رد نقش نامرتبط و رفتار نقش قدیمی نیز متناسب با پایان دورهٔ گذار به‌روز شوند.
+
+### API قدیمی دوره‌ها
+
+1. تمام مصرف‌کنندگان شناخته‌شده، از جمله frontend منتشرشده، به `/api/CustomerGroupQuotaPeriods` منتقل شده باشند.
+2. پس از انتشار هماهنگ، لاگ دسترسی **تمام نمونه‌های فعال** دست‌کم **۷ روز متوالی** بررسی شود و هیچ درخواست
+   به `/api/CustomerGroupShipmentPlans` و مسیرهای زیرمجموعهٔ آن ثبت نشده باشد. نبود لاگ، نشانهٔ نبود مصرف نیست؛
+   هر درخواست قدیمی بازهٔ مشاهده را از نو آغاز می‌کند و مصرف‌کننده باید بررسی شود.
+3. بازهٔ مشاهده و نتیجهٔ بررسی مصرف‌کنندگان در گزارش انتشار ثبت شود؛ سپس فقط attribute مسیر alias حذف شود
+   و مسیر اصلی، GET جزئیات و عملیات نوشتن در آزمون انتشار بررسی شوند. این شرط مستقل از مهلت انقضای JWT است.
+
+برای این بررسی، زمان UTC و آمار مسیر/روش/وضعیت پاسخ کافی است؛ رمز، header احراز هویت، JWT خام یا بدنهٔ
+درخواست در لاگ سازگاری ثبت نشود. حذف نقش قدیمی و حذف alias API می‌توانند در انتشارهای جدا انجام شوند؛
+هرکدام فقط پس از احراز معیار خودش.
+
+مسیر قدیمی **صفحه** `/CustomerGroupShipments` برای لینک‌ها و بوکمارک‌ها همچنان به `/CustomerGroupQuotas`
+هدایت می‌شود و مشمول مهلت حذف API نیست. مسیر گزارش واقعی `GET /api/CustomerGroupShipments` نیز API فعال گزارش
+ارسالی‌هاست و در این پاک‌سازی حذف نمی‌شود. نام‌های قدیمی در migrationهای تاریخی و `Down` تغییر نام هم حفظ می‌شوند.
+این مرحله به migration تازه، حذف نقش از دیتابیس یا تغییر انتساب دسترسی کاربران نیاز ندارد.
